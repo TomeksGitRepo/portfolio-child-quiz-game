@@ -1,0 +1,16 @@
+{
+  "name": "proxy_server",
+  "version": "1.0.0",
+  "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
+  "main": "index.js",
+  "scripts": {
+    "start-proxy": "node index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/react-select": "^4.0.17",
+    "express": "^4.17.1",
+    "express-http-proxy": "^1.6.2"
+  }
+}

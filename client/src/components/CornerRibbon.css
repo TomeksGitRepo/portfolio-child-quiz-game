@@ -1,0 +1,24 @@
+.corner-ribbon{
+  width: 350px;
+  background: #fdc331;
+  color: #007c98;
+  position: fixed;
+  text-align: center;
+  top: 80px;
+  line-height: 40px;
+  font-size: 20px;
+}
+
+.corner-ribbon:hover {
+  background: red;
+  color: white;
+  cursor: pointer;
+}
+
+.corner-ribbon.right{
+  right: -75px;
+  left: auto;
+  -ms-transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+  transform: rotate(45deg);
+}

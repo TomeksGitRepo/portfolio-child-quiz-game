@@ -1,0 +1,14 @@
+.clicked {
+    background-color: aquamarine !important;
+}
+
+.card:hover {
+    background-color: aquamarine !important;
+    cursor: pointer;
+}
+
+@media only screen and (max-width : 724px) {    
+    .header { 
+    min-width: 80vw !important;
+    }
+  }

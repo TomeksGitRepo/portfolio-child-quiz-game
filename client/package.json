@@ -1,0 +1,55 @@
+{
+  "name": "quizgame",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.3.2",
+    "@testing-library/user-event": "^7.1.2",
+    "@types/express": "^4.17.13",
+    "@types/jest": "^24.0.0",
+    "@types/node": "^12.0.0",
+    "@types/react-select": "^4.0.17",
+    "@types/react-transition-group": "^4.2.4",
+    "axios": "^0.21.1",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-modal": "^3.14.3",
+    "react-responsive": "^9.0.0-beta.3",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "3.4.1",
+    "react-select": "^4.3.1",
+    "react-transition-group": "^4.4.1",
+    "recoil": "^0.4.0",
+    "typescript": "~3.7.2"
+  },
+  "scripts": {
+    "start-windows": "set PORT=3007 && react-scripts start",
+    "start-linux": "export PORT=3007 && react-scripts start",
+    "serve-linux": "serve -l 3007 -s build",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@types/react": "^16.9.35",
+    "@types/react-dom": "^16.9.8",
+    "@types/react-modal": "^3.12.1",
+    "@types/react-router-dom": "^5.1.5"
+  }
+}

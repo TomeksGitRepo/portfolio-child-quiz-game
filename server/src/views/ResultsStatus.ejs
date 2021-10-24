@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover" />
+  <title>Wyniki quizów</title>
+  <meta name="description" content="Wyniki quizów" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script>
+    function downloadExcelFile() {
+       fetch('/generate/ResultExcel').then( res => res.blob()).then( blob => {
+      console.log('blob is: '  + blob);
+      var dllink = document.createElement('a');
+    dllink.href = window.URL.createObjectURL(blob);
+    dllink.setAttribute("download","scoresChildrenGame.xlsx")
+    dllink.click();
+  });
+    }
+  </script>
+
+  <style>
+    .bordered {
+      border: 1px solid;
+    }
+
+    .Poprawna {
+      background: green;
+    }
+
+    .Błędna {
+      background: red;
+    }
+  </style>
+</head>
+<% function getCorrectPreTestAnswers(results) { 
+  var preTestCorrectAnswers=0; 
+  results.map(function (item) { 
+    if (item.questionType===0 && item.isAnswerCorrect===true) { 
+      preTestCorrectAnswers=preTestCorrectAnswers + 1; } }); 
+      return preTestCorrectAnswers;
+   } 
+   
+  function getPreTestQuestionNumber(results) { 
+    var preTestQuestionNumber=0;
+  results.map(function (item) { 
+
+    if (item.questionType===0 ) { 
+      preTestQuestionNumber=preTestQuestionNumber + 1; } 
+    });
+  return preTestQuestionNumber;
+  } 
+
+  function getCorrectPostTestAnswers(results) { 
+    var postTestCorrectAnswers=0;
+  results.map(function (item) { 
+    if (item.questionType===1 && item.isAnswerCorrect===true) {
+  postTestCorrectAnswers=postTestCorrectAnswers + 1; 
+    } });
+     return postTestCorrectAnswers; 
+    } 
+    function getPostTestQuestionNumber(results) { 
+      var postTestQuestionNumber=0; results.map(function (item) { 
+        if (item.questionType===1 ) { postTestQuestionNumber=postTestQuestionNumber + 1; 
+        } }); 
+        return postTestQuestionNumber; 
+      }
+  function getPercentageChange(preTestCorrect, postTestCorrect, questionNumber) { 
+    var percentageChange=(postTestCorrect - preTestCorrect)/questionNumber * 100; 
+    return percentageChange; 
+  } 
+  function getQuestionType(question) { 
+    if (question.questionType===0) { 
+      return 'PreTest' ;
+    } 
+    if (question.questionType===1) { 
+      return 'PostTest' ; 
+    } } 
+    function isAnswerCorrect(question) { 
+      if (question.isAnswerCorrect) { 
+        return 'Poprawna' 
+      } else { 
+        return "Błędna" 
+      } } 
+      function getQuizDifficultyLevel(result) { 
+        if (result.difficultyLevel===0) { 
+          return 'Łatwy'; 
+        } 
+        if (result.difficultyLevel===1) {
+          return 'Średni'; 
+        } 
+        if (result.difficultyLevel===2) { 
+          return 'Trudny'; 
+          } 
+      } 
+  %>
+
+
+  <body>
+    <div class="container">
+      <!-- Static navbar -->
+    <!--   <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">Navbar</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Link</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+                  aria-expanded="false">
+                  Dropdown
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <li><a class="dropdown-item" href="#">Action</a></li>
+                  <li><a class="dropdown-item" href="#">Another action</a></li>
+                  <li>
+                    <hr class="dropdown-divider" />
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="#">Something else here</a>
+                  </li>
+                </ul>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link disabled">Disabled</a>
+              </li>
+            </ul>
+            <form class="d-flex">
+              <input class="form-control me-2" type="search" placeholder="Wyszukaj" aria-label="Wyszukaj" />
+              <button class="btn btn-outline-success" type="submit">
+                Wyszukaj
+              </button>
+            </form>
+          </div>
+        </div>
+      </nav> -->
+
+      <!-- Main component for a primary marketing message or call to action -->
+      <div class="jumbotron">
+        <h1>Wyniki testów:</h1>
+          <div class="row" style="padding: 15px;" >
+        <button type="button" class="btn btn-primary btn-lg btn-block" onclick="downloadExcelFile()">Pobierz wyniki w excelu</button>
+        </div>
+        <div class="row" style="height: 10px;"></div>
+        <div class="accordion accordion-flush" id="accordionFlushExample">
+          
+          <% for (var i=0; i < quizResultData.length; i++ ) { %>
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="flush-headingOne">
+                <button class="accordion-button collapsed bordered" type="button" data-bs-toggle="collapse"
+                  data-bs-target=<%="#flush-collapseOne" + i %>
+                  aria-expanded="false"
+                  aria-controls=<%= "flush-collapseOne" + i %>> Nazwa szkoły:
+                    <span style="font-size: 20px; padding: 6px; color: red">
+                      <%= quizResultData[i]['schoolName'] %>
+                    </span>
+                    Ilość quizów:
+                    <span style="font-size: 20px; padding: 6px; color: red">
+                      <%= quizResultData[i]['results'].length %>
+                    </span>
+                    Ostatni quiz:
+                    <span style="font-size: 20px; padding: 6px; color: red">
+                      <%= moment(quizResultData[i]['results'][quizResultData[i]['results'].length -
+                        1]['created_at']).fromNow() %>
+                    </span>
+                </button>
+              </h2>
+              <div id=<%="flush-collapseOne" + i %>
+                class=" accordion-collapse collapse bordered"
+                aria-labelledby="flush-headingOne"
+                data-bs-parent="#accordionFlushExample">
+                <div class="accordion-body">
+                  <div class="accordion accordion-flush" id=<%="accordionResultInner" + i %>
+                    <% for (var result=0; result < quizResultData[i]['results'].length; result++) { %>
+                      <div class="accordion-item">
+                        <h2 class="accordion-header" id=<%="flush-innerHeading" + i %>>
+                          <button class="accordion-button collapsed bordered" type="button" data-bs-toggle="collapse"
+                            data-bs-target=<%="#flush-collapseInner" + "at" + i + "for" + result %>
+                            aria-expanded="false"
+                            aria-controls=<%= "flush-collapseInner" + "at" + i + "for" + result %>>
+                              Data quizu: <%=
+                                moment(quizResultData[i]['results'][result]['created_at']).format("YYYY-MM-DD HH:mm") %>
+                                Wynik preTestu: <%= getCorrectPreTestAnswers(quizResultData[i]['results'][result]['results']) %>/<%= getPreTestQuestionNumber(quizResultData[i]['results'][result]['results'])%>
+                                    Wynik postTestu: <%=
+                                      getCorrectPostTestAnswers(quizResultData[i]['results'][result]['results']) %>/<%=
+                                        getPostTestQuestionNumber(quizResultData[i]['results'][result]['results'])%>
+                                        Procentowa zmian: <%=
+                                          getPercentageChange(getCorrectPreTestAnswers(quizResultData[i]['results'][result]['results']),
+                                          getCorrectPostTestAnswers(quizResultData[i]['results'][result]['results']),
+                                          getPostTestQuestionNumber(quizResultData[i]['results'][result]['results']))%>%
+                                          Poziom Trudności: <%= getQuizDifficultyLevel(quizResultData[i]['results'][result]) %>
+                          </button>
+                        </h2>
+                        <div id=<%="flush-collapseInner" + "at" + i + "for" + result %> class=" accordion-collapse
+                          collapse bordered" aria-labelledby=<%= "accordionResultInner" + i %> data-bs-parent=
+                            <%= "accordionResultInner" + i %>>
+                              <div class="accordion-body">
+                                <div>Wyniki Quizu:</div>
+                                <% for (var res=0 ; res < quizResultData[i]['results'][result]['results'].length; res++)
+                                  { %>
+                                  <% if(res - 1> 0 &&
+                                    getQuestionType(quizResultData[i]['results'][result]['results'][res - 1]) !=
+                                    getQuestionType(quizResultData[i]['results'][result]['results'][res])) { %>
+                                    Post test:
+                                    <% } %>
+                                      <div class=<%=isAnswerCorrect(quizResultData[i]['results'][result]['results'][res])%> style="color: white;" >
+                                        Typ pytania: <%=
+                                          getQuestionType(quizResultData[i]['results'][result]['results'][res]) %>
+                                          Pytanie nr: <%=
+                                            quizResultData[i]['results'][result]['results'][res]['questionNumber'] + 1
+                                            %>
+                                            Odpowiedź: <%=
+                                              isAnswerCorrect(quizResultData[i]['results'][result]['results'][res]) %>
+                                      </div>
+                                      <% } %>
+                              </div>
+                        </div>
+                      </div>
+                      <% } %>   
+                </div>   
+                </div>
+                </div>      
+                  <% } %> <!-- first loop-->
+                  </div>
+                </div>
+              </div>
+        <!-- Have to place this here because of bootstraps requirements -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ"
+          crossorigin="anonymous"></script>
+  </body>
+
+</html>
